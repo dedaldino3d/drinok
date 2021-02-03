@@ -1,0 +1,65 @@
+* Database Design *
+
+    - Accounts
+        - ID            serial pk
+        - username      varchar(50) unique not null
+        - email         varchar(100) unique not null
+        - password      varchar(100) not null
+        - name          varchar(150)
+        - age           tinyInt
+        - location      varchar(200)
+        - createdAt     date
+        - updatedAt     date
+        - lastLogin     date
+
+    - CarryProducts
+        - ID            serial PK
+        - accountID     Accounts FK
+        - productID     Products FK
+        ------------
+        accountID       FK
+        productID       FK
+
+    - Products
+        - ID            serial pk
+        - name          varchar(200) not null
+        - categoryID    Categories FK
+        - description   text
+        - thumbnail     varchar(500)
+        - createdAt     date
+        - updatedAt     date
+
+    - Categories
+        - ID            serial pk
+        - name          varchar(50) unique not null
+        - description   text
+
+
+
+** Activity Diagram **
+
+    - User:
+        - login
+        - sign up
+        - list products
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
