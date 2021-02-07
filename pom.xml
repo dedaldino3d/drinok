@@ -8,11 +8,11 @@
 		<version>2.4.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.namaqua.webservice</groupId>
-	<artifactId>namaqua</artifactId>
+	<groupId>com.drinok.webservice</groupId>
+	<artifactId>drinok</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>namaqua</name>
-	<description>Namaqua Web Service</description>
+	<name>drinok</name>
+	<description>drinok Web Service</description>
 
 	<properties>
 		<java.version>1.8</java.version>

@@ -1,10 +1,10 @@
-package com.namaqua.webservice;
+package com.drinok.webservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NamaquaApplicationTests {
+class DrinokApplicationTests {
 
 	@Test
 	void contextLoads() {
