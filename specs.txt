@@ -1,9 +1,28 @@
 * Database Design *
 
-    - Accounts
+==============================================================
+== ACCOUNT ==
+    - Address
+        - ID                serial pk
+        - firstName         varchar(256)
+        - lastName          varchar(256)
+        - company_name      varchar(256)
+        - streetAddress1    varchar(256)
+        - city              varchar(256)
+        - cityArea          varchar(128)
+        - postalCode        varchar(20)
+        - country           varchar(256)
+        - countryArea       varchar(128)
+        - phone             varchar(256)
+
+    - Account
         - ID            serial pk
         - username      varchar(50) unique not null
         - email         varchar(100) unique not null
+        - firstName     varchar(256)
+        - lastName      varchar(256)
+        - addresses     Address FK
+        - avatarUrl     varchar(256)
         - password      varchar(100) not null
         - name          varchar(150)
         - age           tinyInt
@@ -11,6 +30,161 @@
         - createdAt     date
         - updatedAt     date
         - lastLogin     date
+
+    - CustomerNote
+        - user            Account FK
+        - date            date
+        - content         text
+        - isPublic        boolean
+        - customer        Account FK
+==============================================================
+== CHECKOUT ==
+
+    - Checkout
+        - user              Account FK
+        - createdAt         date
+        - lastChange        date
+        - email             varchar(256)
+        - quantity          unsigned_int
+        - billingAddress    Address FK
+        - shippingAddress   Address FK
+        - shippingMethod    ShippingMethod FK
+        - note              text
+        - currency          varchar(40)
+        - country           varchar(256)
+        - discountAmount    double
+        - discount          double
+        - discountName      varchar(255)
+        - translatedDiscountName    varchar(255)
+        - voucherCode               varchar(12)
+        - giftCards                 GiftCard FK
+        - redirectUrl               Url
+        - trackingCode              varchar(255)
+
+    - CheckoutLine
+        - checkout      Checkout FK
+        - variant       ProductVariant FK
+        - quantity      unsigned_int
+==============================================================
+== Discount ==
+
+    - Voucher
+        - name          varchar(255)
+        - code          varchar(12)
+        - usageLimit    unsigned_int
+        - used          unsigned_int
+        - startDate     date
+        - endDate       date
+        - applyOncePerOrder          boolean
+        - applyOncePerCustomer       boolean
+        - discountValueType          varchar(10)
+        - discountValue              double
+        - discount                   double // in money
+        - countries                  Country FK
+        - currency                   varchar(255)
+        - minSpentAmount             double
+        - minSpent                   double // in money
+        - minCheckoutItemsQuantity   unsigned_int
+        - products                   Product M2M
+        - collections                Collection M2M
+         - categories                Category M2M
+
+    - VoucherCustomer
+        - voucher               Voucher FK
+        - customerEmail         varchar(255)
+
+    - Sale
+        - name                  varchar(255)
+        - type                  varchar(255) // multiple choices
+        - value                 double
+        - products              Product M2M
+        - categories            Category M2M
+        - collections           Collection M2M
+        - startDate             date
+        - endDate             date
+==============================================================
+== GiftCard ==
+
+    - GiftCard
+        - code              varchar(16)
+        - user              Account FK
+        - createdAt         date
+        - startDate         date
+        - endDate           date
+        - lastUsedOn        date
+        - isActive          boolean
+        - currency          varchar(255) // multiple choices
+        - initialBalanceAmount          double
+        - initialBalance                double // in money
+        - currentBalanceAmount          double
+        - currentBalance                double
+==============================================================
+== Order ==
+
+    - Order
+        - createAt              date
+        - status                varchar(32)
+        - user                  Account FK
+        - languageCode          varchar(35)
+        - trackingClientId      varchar(36)
+        - billingAddress        Address FK
+        - shippingAddress       Address FK
+        - userEmail             varchar(255)
+        - currency              varchar(245)
+        - shippingMethod        ShippingMethod FK
+        - shippingMethodName    varchar(255)
+        - shippingPriceNetAmount            double
+        - shippingPriceNet                  double // in money
+        - shippingPriceGrossAmount          double
+        - shippingPriceGross                double // in money
+        - shippingPrice                     double // taxed money
+        - token                             varchar(36)
+        - checkoutToken                     varchar(36)
+        - totalNetAmount                    double
+        - totalNet                          double // in money
+        - totalGrossAmount                  double
+        - totalGross                        double // in money
+        - total                             double // taxed money
+        - voucher                           Voucher FK
+        - giftCards                         GiftCard M2M
+        - discountAmount                    double
+        - discount                          double // money field
+        - discountName                      varchar(255)
+        - displayGrossPrices                boolean
+        - customerNote                      text
+
+    - OrderLine
+        - order                         Order FK
+        - variant                       ProductVariant FK
+        - productName                   varchar(386)
+        - variantName                   varchar(255)
+        - productSku                    varchar(255)
+        - isShippingRequired            boolean
+        - quantity                      tinyint
+        - quantityFullFilled            tinyint
+        - currency                      varchar(255) // multiple choices
+        - unitPriceNetAmount            double
+        - unitPriceNet                  double // in money
+        - unitPriceGrossAmount          double
+        - unitPriceGross                double // in money
+        - unitPrice                     double // taxed money
+        - taxRate                       double
+
+
+    - Fulfillment
+        - fulfillmentOrder              unsigned_short
+        - order                         Order FK
+        - status                        varchar(32)
+        - trackingNumber                varchar(255)
+        - createdAt                     date
+
+
+    - FulfillmentLine
+        - orderLine                     OrderLine FK
+        - fulfillment                   Fulfillment FK
+        - quantity                      unsigned_short
+        - stock                         Stock FK
+
 
     - CarryProducts
         - ID            serial PK
