@@ -2,6 +2,7 @@
 
 ==============================================================
 == ACCOUNT ==
+
     - Address
         - ID                serial pk
         - firstName         varchar(256)
@@ -37,6 +38,7 @@
         - content         text
         - isPublic        boolean
         - customer        Account FK
+
 ==============================================================
 == CHECKOUT ==
 
@@ -65,8 +67,9 @@
         - checkout      Checkout FK
         - variant       ProductVariant FK
         - quantity      unsigned_int
+
 ==============================================================
-== Discount ==
+== DISCOUNT ==
 
     - Voucher
         - name          varchar(255)
@@ -101,9 +104,10 @@
         - categories            Category M2M
         - collections           Collection M2M
         - startDate             date
-        - endDate             date
+        - endDate               date
+
 ==============================================================
-== GiftCard ==
+== GIFTCARD==
 
     - GiftCard
         - code              varchar(16)
@@ -118,8 +122,9 @@
         - initialBalance                double // in money
         - currentBalanceAmount          double
         - currentBalance                double
+
 ==============================================================
-== Order ==
+== ORDER ==
 
     - Order
         - createAt              date
@@ -185,37 +190,133 @@
         - quantity                      unsigned_short
         - stock                         Stock FK
 
+==============================================================
+== PRODUCT ==
 
-    - CarryProducts
-        - ID            serial PK
-        - accountID     Accounts FK
-        - productID     Products FK
-        ------------
-        accountID       FK
-        productID       FK
+    - Category
+        - name                          varchar(250)
+        - slug                          varchar(255)
+        - description                   text
+        - parent                        Category(self) FK
+        - backgroundImage               image
+        - backgroundImageAlt            varchar(25)
 
-    - Products
-        - ID            serial pk
-        - name          varchar(200) not null
-        - categoryID    Categories FK
-        - description   text
-        - thumbnail     varchar(500)
-        - createdAt     date
-        - updatedAt     date
+    - ProductType
+        - name                          varchar(250)
+        - slug                          varchar(255)
+        - hasVariants                   boolean
+        - isShippingRequired            boolean
+        - isDigital                     boolean
+        - weight                        double // measurement field
 
-    - Categories
-        - ID            serial pk
-        - name          varchar(50) unique not null
-        - description   text
+    - Product
+        - productType                   Product FK
+        - name                          varchar(250)
+        - slug                          varchar(255)
+        - description                   text
+        - category                      Category FK
+        - currency                      varchar(25)
+        - minimalVariantPriceAmount     double
+        - minimalVariantPrice           double // in money
+        - updatedAt                     date
+        - chargeTaxes                   boolean
+        - weight                        double // measurement field
+        - availableForPurchase          date
+        - visibleInListings             boolean
+        - defaultVariant                ProductVariant O2O
+
+    - ProductVariant
+        - sku                           varchar(255)
+        - name                          varchar(255)
+        - currency                      varchar(25)
+        - priceAmount                   double
+        - price                         double // in money
+        - product                       Product FK
+        - images                        ProductImage M2M
+        - trackInventory                boolean
+        - costPriceAmount               double
+        - costPrice                     double // in money
+        - weight                        double // measurement field
+
+    - DigitalContent
+        - useDefaultSettings            boolean
+        - automaticFulfillment          boolean
+        - contentType                   varchar(128)
+        - productVariant                ProductVariant FK
+        - contentFile                   file
+        - maxDownloads                  int
+        - urlValidDays                  int
+
+    - DigitalContentUrl
+        - content                       DigitalContent FK
+        - createdAt                     date
+        - downloadNum                   int
+        - line                          OrderLine O2O
+
+    - ProductImage
+        - product                       Product FK
+        - image                         image
+        - alt                           varchar(128)
+
+    - VariantImage
+        - variant                       ProductVariant FK
+        - image                         ProductImage FK
+
+    - CollectionProduct
+        - collection                    Collection FK
+        - product                       Product FK
+
+    - Collection
+        - name                          varchar(250)
+        - slug                          varchar(255)
+        - products                      Product M2M
+        - backgroundImage               image
+        - backgroundImageAlt            varchar(55)
+        - description                   text
+
+==============================================================
+== SHIPPING ==
+
+    - Shipping
+        - name                          varchar(100)
+        - countries                     varchar(250) // countries e.g Country FK
+        - default                       boolean
+
+    - ShippingMethod
+        - name                          varchar(100)
+        - type                          varchar(30)
+        - currency                      varchar(100)
+        - priceAmount                   double
+        - price                         double // in money
+        - shippingZone                  ShippingZone FK
+        - minimumOrderPriceAmount       double
+        - minimumOrderPrice             double // in money
+        - maximumOrderPriceAmount       double
+        - maximumOrderPrice             double // in money
+        - minimumOrderWeight            double // measurement field
+        - maximumOrderWeight            double // measurement field
+
+==============================================================
+== WAREHOUSE ==
+
+    - Warehouse
+         - name                          varchar(250)
+         - slug                          varchar(255)
+         - companyName                   varchar(255)
+         - shippingZones                ShippingZone FK
+         - address                       Address FK
+         - email                         varchar(255)
+
+    - Stock
+        - warehouse                     Warehouse FK
+        - productVariant                ProductVariant FK
+        - quantity                      unsigned_int
 
 
-
-** Activity Diagram **
-
-    - User:
-        - login
-        - sign up
-        - list products
+    - Allocation
+        - orderLine                     OrderLine FK
+        - stock                         Stock FK
+        - quantityAllocated             unsigned_int
 
 
 
